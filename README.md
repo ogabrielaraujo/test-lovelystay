@@ -3,5 +3,5 @@
 TO-DO:
 
 - [x] Init environment with yarn and docker
-- [ ] Code standards
+- [x] Code standards
 - [ ] Configure typescript
