@@ -2,4 +2,6 @@
 
 TO-DO:
 
-- [ ] Init environment with yarn and docker
+- [x] Init environment with yarn and docker
+- [ ] Code standards
+- [ ] Configure typescript
