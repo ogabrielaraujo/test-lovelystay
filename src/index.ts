@@ -1,12 +1,11 @@
 import 'dotenv/config'
 import inquirer from 'inquirer'
 
-import { addNewUserFromGithub } from './service'
-import { sleep } from './util'
+import { addNewUserFromGithub, listAllUsers } from './service'
 
 let options: string[] = [
   'Add new user from github',
-  'Search users by username',
+  'List all stored users',
   'Search users by location',
 ]
 
@@ -23,6 +22,10 @@ async function main() {
   switch (navigation) {
     case 'Add new user from github':
       addNewUserFromGithub()
+      break
+
+    case 'List all stored users':
+      listAllUsers()
       break
 
     default:

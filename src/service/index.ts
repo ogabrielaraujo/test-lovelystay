@@ -1,3 +1,4 @@
 import addNewUserFromGithub from './addNewUserFromGithub'
+import listAllUsers from './listAllUsers'
 
-export { addNewUserFromGithub }
+export { addNewUserFromGithub, listAllUsers }

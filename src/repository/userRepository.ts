@@ -13,4 +13,12 @@ export class UserRepository {
       return 'Database error'
     }
   }
+
+  async findAll(): Promise<string | any[]> {
+    try {
+      return await db.any('SELECT * FROM users')
+    } catch (error) {
+      return 'Database error'
+    }
+  }
 }
