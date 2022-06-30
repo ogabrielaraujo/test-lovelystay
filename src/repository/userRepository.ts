@@ -21,4 +21,14 @@ export class UserRepository {
       return 'Database error'
     }
   }
+
+  async findByLocation(location: string): Promise<string | any[]> {
+    try {
+      return await db.any('SELECT * FROM users WHERE location LIKE $1', [
+        '%' + location + '%', // allow search for parts of location. ex: Lis for Lisbon
+      ])
+    } catch (error) {
+      return 'Database error'
+    }
+  }
 }
