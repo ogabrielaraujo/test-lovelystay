@@ -10,10 +10,11 @@ TO-DO:
   - [x] Install deps for cli
 - [ ] CLI
   - [x] Navigation menu
-  - [ ] Fetch information from github users (name and location)
-  - [ ] Store user infos on postgres using pg-promise
-  - [ ] Fetch saved users on database (search)
-  - [ ] Improve - search users by location
+  - [x] Fetch information from github users (name and location)
+  - [x] Store user infos on postgres using pg-promise
+  - [ ] Fetch all saved users on database (findAll)
+  - [ ] Search users by name
+  - [ ] Search users by location
   - [ ] Look for users programming languages and save
-  - [ ] Improve - search users by programming languages
+  - [ ] Search users by programming languages
 - [ ] README
