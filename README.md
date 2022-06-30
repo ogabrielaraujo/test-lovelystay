@@ -6,8 +6,8 @@ TO-DO:
 - [x] Code standards
 - [x] Configure typescript
 - [ ] Project basement
-  - [ ] Folder structure
-  - [ ] Install deps for cli
+  - [x] Folder structure
+  - [x] Install deps for cli
 - [ ] CLI
   - [ ] Navigation menu
   - [ ] Fetch information from github users (name and location)

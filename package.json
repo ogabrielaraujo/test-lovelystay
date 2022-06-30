@@ -2,11 +2,25 @@
   "name": "lovelystay",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "repository": "git@github.com:ogabrielaraujo/test-lovelystay.git",
   "author": "Gabriel Araujo <gabriiel66@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "pretsc": "rm -rf ./dist",
+    "tsc": "tsc",
+    "start": "node --experimental-specifier-resolution=node ./dist/index.js",
+    "dev": "yarn tsc && yarn start",
+    "up": "docker compose up -d",
+    "down": "docker compose down"
+  },
   "devDependencies": {
+    "@types/inquirer": "^8.2.1",
     "@types/node": "^18.0.0",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "inquirer": "^9.0.0",
+    "nanospinner": "^1.1.0"
   }
 }
