@@ -7,7 +7,7 @@ TO-DO:
 - [x] Configure typescript
 - [ ] Project basement
   - [x] Folder structure
-  - [ ] Install deps for cli
+  - [x] Install deps for cli
 - [ ] CLI
   - [ ] Navigation menu
   - [ ] Fetch information from github users (name and location)
