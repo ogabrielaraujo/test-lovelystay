@@ -2,12 +2,19 @@ import axios from 'axios'
 import inquirer from 'inquirer'
 import { createSpinner } from 'nanospinner'
 
-import { UserRepository } from '../repository'
+import { LanguageRepository, UserRepository } from '../repository'
 
 interface GithubUserResponse {
   id: number
   login: string
   location?: string
+}
+
+interface GithubRepoReponse {
+  id: number
+  name: string
+  topics: string[]
+  url: string
 }
 
 const addNewUserFromGithub = async () => {
@@ -21,14 +28,18 @@ const addNewUserFromGithub = async () => {
 
   spinner.start()
 
-  const response = await axios.get(`https://api.github.com/users/${username}`)
+  // TODO check if user already exists
 
-  if (response.status !== 200) {
+  const userResponse = await axios.get(
+    `https://api.github.com/users/${username}`
+  )
+
+  if (userResponse.status !== 200) {
     spinner.error({ text: 'Error while searching for github user' })
     return
   }
 
-  const user = response.data as GithubUserResponse
+  const user = userResponse.data as GithubUserResponse
 
   if (user.location.length > 255 || user.location.length < 3) {
     return spinner.error({ text: 'Location not valid' })
@@ -38,9 +49,30 @@ const addNewUserFromGithub = async () => {
     return spinner.error({ text: 'Location not valid' })
   }
 
+  // programming languages
+  const reposResponse = await axios.get(
+    `https://api.github.com/users/${username}/repos`
+  )
+
+  if (reposResponse.status !== 200 || reposResponse.data.length <= 0) {
+    spinner.error({ text: 'Error while searching for user repos' })
+    return
+  }
+
   try {
     const userRepository = new UserRepository()
-    await userRepository.insert(user.login, user.location)
+    const languageRepository = new LanguageRepository()
+
+    await userRepository.insert(user.id, user.login, user.location)
+
+    // TODO refact (performance, transaction...)
+    reposResponse.data.map(async (repo: GithubRepoReponse) => {
+      if (repo.topics.length > 0) {
+        repo.topics.map(async (topic: string) => {
+          await languageRepository.insert(user.id, topic)
+        })
+      }
+    })
 
     return spinner.success({ text: 'User saved succesfully' })
   } catch (error) {

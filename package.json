@@ -13,7 +13,8 @@
     "dev": "yarn tsc && yarn start",
     "up": "docker compose up -d",
     "down": "docker compose down",
-    "migrate": "tsc && node --experimental-specifier-resolution=node ./dist/migration/001_users.js"
+    "migrate:users": "tsc && node --experimental-specifier-resolution=node ./dist/migration/001_users.js",
+    "migrate:languages": "tsc && node --experimental-specifier-resolution=node ./dist/migration/002_languages.js"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.1",
