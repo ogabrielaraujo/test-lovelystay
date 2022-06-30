@@ -9,7 +9,8 @@
   "scripts": {
     "pretsc": "rm -rf ./dist",
     "tsc": "tsc",
-    "start": "node ./dist/index.js",
+    "start": "node --experimental-specifier-resolution=node ./dist/index.js",
+    "dev": "yarn tsc && yarn start",
     "up": "docker compose up -d",
     "down": "docker compose down"
   },
