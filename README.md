@@ -9,7 +9,7 @@ TO-DO:
   - [x] Folder structure
   - [x] Install deps for cli
 - [ ] CLI
-  - [ ] Navigation menu
+  - [x] Navigation menu
   - [ ] Fetch information from github users (name and location)
   - [ ] Store user infos on postgres using pg-promise
   - [ ] Fetch saved users on database (search)
