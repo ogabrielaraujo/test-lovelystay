@@ -6,7 +6,7 @@ TO-DO:
 - [x] Code standards
 - [x] Configure typescript
 - [ ] Project basement
-  - [ ] Folder structure
+  - [x] Folder structure
   - [ ] Install deps for cli
 - [ ] CLI
   - [ ] Navigation menu
