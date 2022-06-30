@@ -1,5 +1,5 @@
+import 'dotenv/config'
 import inquirer from 'inquirer'
-import { createSpinner } from 'nanospinner'
 
 import { addNewUserFromGithub } from './service'
 import { sleep } from './util'
@@ -18,9 +18,6 @@ async function main() {
     type: 'list',
     message: 'Select an option below:',
     choices: options,
-    default() {
-      return false
-    },
   })
 
   switch (navigation) {
