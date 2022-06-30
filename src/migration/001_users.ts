@@ -4,13 +4,10 @@ import { database } from '../util'
 async function up() {
   try {
     const response = await database.any(`
-      CREATE SEQUENCE IF NOT EXISTS users_id_seq;
-
       CREATE TABLE "public"."users" (
-        "id" int4 NOT NULL DEFAULT nextval('users_id_seq'::regclass),
+        "id" int4 NOT NULL,
         "name" varchar(255) NOT NULL,
-        "location" varchar(255),
-        PRIMARY KEY ("id")
+        "location" varchar(255)
       );
     `)
 
