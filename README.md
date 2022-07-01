@@ -15,5 +15,6 @@ TO-DO:
   - [x] Fetch all saved users on database (findAll)
   - [x] Search users by location
   - [x] Look for users programming languages and save
+  - [x] Check if user already exists
   - [ ] Search users by programming languages
 - [ ] README
