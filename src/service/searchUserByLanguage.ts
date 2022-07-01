@@ -1,19 +1,19 @@
 import inquirer from 'inquirer'
 import { createSpinner } from 'nanospinner'
 
-import { findUserByLocation } from '../repository'
+import { findUserByLanguage } from '../repository'
 
-const searchUserByLocation = async () => {
-  const { location } = await inquirer.prompt({
-    name: 'location',
+const searchUserByLanguage = async () => {
+  const { language } = await inquirer.prompt({
+    name: 'language',
     type: 'input',
-    message: 'Type the location to search for a user',
+    message: 'Type the programming language to search for a user',
   })
 
   const spinner = createSpinner('Loading...')
 
   try {
-    const users = await findUserByLocation(location)
+    const users = await findUserByLanguage(language)
 
     spinner.stop()
     console.clear()
@@ -26,4 +26,4 @@ const searchUserByLocation = async () => {
   }
 }
 
-export default searchUserByLocation
+export default searchUserByLanguage

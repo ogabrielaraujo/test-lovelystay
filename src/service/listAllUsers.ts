@@ -1,13 +1,12 @@
 import { createSpinner } from 'nanospinner'
 
-import { UserRepository } from '../repository'
+import { findAllUsers } from '../repository'
 
 const listAllUsers = async () => {
   const spinner = createSpinner('Loading...')
 
   try {
-    const userRepository = new UserRepository()
-    const users = await userRepository.findAll()
+    const users = await findAllUsers()
 
     spinner.stop()
     console.clear()

@@ -1,7 +1,7 @@
-interface User {
+interface IUser {
   id: number
   name: string
   location: string
 }
 
-export default User
+export default IUser

@@ -1,14 +1,12 @@
-import axios from 'axios'
 import inquirer from 'inquirer'
 import { createSpinner } from 'nanospinner'
 
-import { UserRepository } from '../repository'
-
-interface GithubUserResponse {
-  id: number
-  login: string
-  location?: string
-}
+import { findUserById, insertManyLanguages, insertUser } from '../repository'
+import {
+  getUserInfosFromGithubAPI,
+  getUserReposFromGithubAPI,
+  IGithubRepoReponse,
+} from '../util'
 
 const addNewUserFromGithub = async () => {
   const spinner = createSpinner('Loading...')
@@ -21,32 +19,62 @@ const addNewUserFromGithub = async () => {
 
   spinner.start()
 
-  const response = await axios.get(`https://api.github.com/users/${username}`)
-
-  if (response.status !== 200) {
-    spinner.error({ text: 'Error while searching for github user' })
+  try {
+  } catch (error) {
     return
   }
 
-  const user = response.data as GithubUserResponse
+  const user = await getUserInfosFromGithubAPI(username, spinner)
+  const userAlreadyExists = await findUserById(user.id)
+
+  if (userAlreadyExists) {
+    spinner.warn({ text: 'User already exists' })
+    return
+  }
 
   if (user.location.length > 255 || user.location.length < 3) {
-    return spinner.error({ text: 'Location not valid' })
+    spinner.error({ text: 'Location not valid' })
+    return
   }
 
-  if (user.login.length > 255) {
-    return spinner.error({ text: 'Location not valid' })
+  if (user.name.length > 255) {
+    spinner.error({ text: 'Location not valid' })
+    return
   }
+
+  const topics = await getUserReposFromGithubAPI(username, spinner)
 
   try {
-    const userRepository = new UserRepository()
-    await userRepository.insert(user.login, user.location)
+    await insertUser(user.id, user.name, user.location)
+
+    const languages = getLanguagesFromGithubResponse(topics)
+    await insertManyLanguages(user.id, languages)
 
     return spinner.success({ text: 'User saved succesfully' })
   } catch (error) {
     spinner.error({ text: 'Error while storing values in the database' })
     return
   }
+}
+
+function getLanguagesFromGithubResponse(repos: IGithubRepoReponse[]): string[] {
+  let languages: string[] = []
+
+  // get all topics
+  repos.map((repo: IGithubRepoReponse) => {
+    if (repo.topics.length <= 0) {
+      return
+    }
+
+    repo.topics.map((topic: string) => {
+      languages.push(topic)
+    })
+  })
+
+  // remove duplicated topics
+  return languages.filter(function (value, key) {
+    return languages.indexOf(value) == key
+  })
 }
 
 export default addNewUserFromGithub

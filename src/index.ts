@@ -4,6 +4,7 @@ import inquirer from 'inquirer'
 import {
   addNewUserFromGithub,
   listAllUsers,
+  searchUserByLanguage,
   searchUserByLocation,
 } from './service'
 
@@ -11,6 +12,7 @@ let options: string[] = [
   'Add new user from github',
   'List all stored users',
   'Search users by location',
+  'Search users by programming language',
 ]
 
 async function main() {
@@ -35,6 +37,9 @@ async function main() {
     case 'Search users by location':
       searchUserByLocation()
       break
+
+    case 'Search users by programming language':
+      searchUserByLanguage()
 
     default:
       console.log('Not found')

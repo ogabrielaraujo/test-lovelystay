@@ -1,4 +1,13 @@
-import sleep from './sleep'
 import database from './database'
+import {
+  getUserInfosFromGithubAPI,
+  getUserReposFromGithubAPI,
+  IGithubRepoReponse,
+} from './github'
 
-export { sleep, database }
+export {
+  database,
+  getUserInfosFromGithubAPI,
+  getUserReposFromGithubAPI,
+  IGithubRepoReponse,
+}

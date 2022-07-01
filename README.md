@@ -14,6 +14,7 @@ TO-DO:
   - [x] Store user infos on postgres using pg-promise
   - [x] Fetch all saved users on database (findAll)
   - [x] Search users by location
-  - [ ] Look for users programming languages and save
+  - [x] Look for users programming languages and save
+  - [x] Check if user already exists
   - [ ] Search users by programming languages
 - [ ] README

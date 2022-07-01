@@ -4,10 +4,13 @@ import { database } from '../util'
 async function up() {
   try {
     const response = await database.any(`
-      CREATE TABLE "public"."users" (
-        "id" int4 NOT NULL,
+      CREATE SEQUENCE IF NOT EXISTS languages_id_seq;
+
+      CREATE TABLE "public"."languages" (
+        "id" int4 NOT NULL DEFAULT nextval('languages_id_seq'::regclass),
+        "userId" int4 NOT NULL,
         "name" varchar(255) NOT NULL,
-        "location" varchar(255)
+        PRIMARY KEY ("id")
       );
     `)
 
@@ -22,7 +25,7 @@ async function up() {
 async function down() {
   try {
     const response = await database.any(`
-     DROP TABLE users;
+     DROP TABLE languages;
     `)
 
     console.log(response)
