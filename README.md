@@ -16,5 +16,8 @@ TO-DO:
   - [x] Search users by location
   - [x] Look for users programming languages and save
   - [x] Check if user already exists
-  - [ ] Search users by programming languages
+  - [x] Search users by programming languages
+- [ ] Tests
+- [ ] Refactor
+- [ ] Review
 - [ ] README
