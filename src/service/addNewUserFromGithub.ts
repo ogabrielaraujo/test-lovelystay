@@ -69,7 +69,7 @@ const addNewUserFromGithub = async () => {
   try {
     await insertUser(user.id, user.login, user.location)
 
-    const languages = handleLanguages(reposResponse.data)
+    const languages = getLanguagesFromGithubResponse(reposResponse.data)
     await insertManyLanguages(user.id, languages)
 
     return spinner.success({ text: 'User saved succesfully' })
@@ -79,7 +79,7 @@ const addNewUserFromGithub = async () => {
   }
 }
 
-function handleLanguages(repos: GithubRepoReponse[]): string[] {
+function getLanguagesFromGithubResponse(repos: GithubRepoReponse[]): string[] {
   let languages: string[] = []
 
   // get all topics
