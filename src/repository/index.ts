@@ -1,4 +1,17 @@
-import { UserRepository } from './userRepository'
-import { LanguageRepository } from './languageRepository'
+import {
+  insertUser,
+  findAllUsers,
+  findUserById,
+  findUserByLanguage,
+  findUserByLocation,
+} from './userRepository'
+import { insertManyLanguages } from './languageRepository'
 
-export { UserRepository, LanguageRepository }
+export {
+  insertUser,
+  findAllUsers,
+  findUserById,
+  findUserByLanguage,
+  findUserByLocation,
+  insertManyLanguages,
+}

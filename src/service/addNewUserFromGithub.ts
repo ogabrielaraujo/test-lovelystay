@@ -2,7 +2,7 @@ import axios from 'axios'
 import inquirer from 'inquirer'
 import { createSpinner } from 'nanospinner'
 
-import { LanguageRepository, UserRepository } from '../repository'
+import { findUserById, insertManyLanguages, insertUser } from '../repository'
 
 interface GithubUserResponse {
   id: number
@@ -18,9 +18,6 @@ interface GithubRepoReponse {
 }
 
 const addNewUserFromGithub = async () => {
-  const userRepository = new UserRepository()
-  const languageRepository = new LanguageRepository()
-
   const spinner = createSpinner('Loading...')
 
   const { username } = await inquirer.prompt({
@@ -42,7 +39,7 @@ const addNewUserFromGithub = async () => {
 
   const user = userResponse.data as GithubUserResponse
 
-  const userAlreadyExists = await userRepository.findById(user.id)
+  const userAlreadyExists = await findUserById(user.id)
 
   if (userAlreadyExists) {
     spinner.warn({ text: 'User already exists' })
@@ -70,10 +67,10 @@ const addNewUserFromGithub = async () => {
   }
 
   try {
-    await userRepository.insert(user.id, user.login, user.location)
+    await insertUser(user.id, user.login, user.location)
 
     const languages = handleLanguages(reposResponse.data)
-    await languageRepository.insertMany(user.id, languages)
+    await insertManyLanguages(user.id, languages)
 
     return spinner.success({ text: 'User saved succesfully' })
   } catch (error) {

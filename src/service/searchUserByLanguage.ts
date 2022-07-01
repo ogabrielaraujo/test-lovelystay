@@ -1,7 +1,7 @@
 import inquirer from 'inquirer'
 import { createSpinner } from 'nanospinner'
 
-import { UserRepository } from '../repository'
+import { findUserByLanguage } from '../repository'
 
 const searchUserByLanguage = async () => {
   const { language } = await inquirer.prompt({
@@ -13,8 +13,7 @@ const searchUserByLanguage = async () => {
   const spinner = createSpinner('Loading...')
 
   try {
-    const userRepository = new UserRepository()
-    const users = await userRepository.findyByLanguage(language)
+    const users = await findUserByLanguage(language)
 
     spinner.stop()
     console.clear()

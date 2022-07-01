@@ -1,7 +1,7 @@
 import inquirer from 'inquirer'
 import { createSpinner } from 'nanospinner'
 
-import { UserRepository } from '../repository'
+import { findUserByLocation } from '../repository'
 
 const searchUserByLocation = async () => {
   const { location } = await inquirer.prompt({
@@ -13,8 +13,7 @@ const searchUserByLocation = async () => {
   const spinner = createSpinner('Loading...')
 
   try {
-    const userRepository = new UserRepository()
-    const users = await userRepository.findByLocation(location)
+    const users = await findUserByLocation(location)
 
     spinner.stop()
     console.clear()
