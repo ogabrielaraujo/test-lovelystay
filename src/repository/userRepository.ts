@@ -43,4 +43,17 @@ export class UserRepository {
       return 'Database error'
     }
   }
+
+  async findyByLanguage(language: string): Promise<string | any[]> {
+    try {
+      return await db.any(
+        `SELECT users.* FROM languages
+        INNER JOIN users ON languages."userId" = users.id
+        WHERE languages.name = $1`,
+        [language]
+      )
+    } catch (error) {
+      return 'Database error'
+    }
+  }
 }
