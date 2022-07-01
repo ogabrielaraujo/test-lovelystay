@@ -20,7 +20,7 @@ export class UserRepository {
 
   async findById(id: number): Promise<string | any[]> {
     try {
-      return await db.any('SELECT * FROM users WHERE id = $1', [id])
+      return await db.oneOrNone('SELECT * FROM users WHERE id = $1', [id])
     } catch (error) {
       return 'Database error'
     }

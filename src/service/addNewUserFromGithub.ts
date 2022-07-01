@@ -18,6 +18,9 @@ interface GithubRepoReponse {
 }
 
 const addNewUserFromGithub = async () => {
+  const userRepository = new UserRepository()
+  const languageRepository = new LanguageRepository()
+
   const spinner = createSpinner('Loading...')
 
   const { username } = await inquirer.prompt({
@@ -27,8 +30,6 @@ const addNewUserFromGithub = async () => {
   })
 
   spinner.start()
-
-  // TODO check if user already exists
 
   const userResponse = await axios.get(
     `https://api.github.com/users/${username}`
@@ -40,6 +41,12 @@ const addNewUserFromGithub = async () => {
   }
 
   const user = userResponse.data as GithubUserResponse
+
+  const userAlreadyExists = await userRepository.findById(user.id)
+
+  if (userAlreadyExists) {
+    return spinner.warn({ text: 'User already exists' })
+  }
 
   if (user.location.length > 255 || user.location.length < 3) {
     return spinner.error({ text: 'Location not valid' })
@@ -60,9 +67,6 @@ const addNewUserFromGithub = async () => {
   }
 
   try {
-    const userRepository = new UserRepository()
-    const languageRepository = new LanguageRepository()
-
     await userRepository.insert(user.id, user.login, user.location)
 
     // TODO refact (performance, transaction...)
