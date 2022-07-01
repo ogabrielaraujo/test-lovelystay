@@ -57,7 +57,7 @@ export async function findUserByLanguage(
     return await db.any(
       `SELECT users.* FROM languages
       INNER JOIN users ON languages."userId" = users.id
-      WHERE languages.name = $1`,
+      WHERE languages.name LIKE $1`,
       ['%' + language + '%']
     )
   } catch (error) {
