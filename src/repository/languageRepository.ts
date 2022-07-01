@@ -13,4 +13,20 @@ export class LanguageRepository {
       return 'Database error'
     }
   }
+
+  async insertMany(
+    userId: number,
+    languages: string[]
+  ): Promise<string | any[]> {
+    return await db.tx((tx) => {
+      const queries = languages.map((language: string) => {
+        return tx.none(
+          'INSERT INTO languages ("userId", "name") VALUES ($1, $2)',
+          [userId, language]
+        )
+      })
+
+      return tx.batch(queries)
+    })
+  }
 }

@@ -45,15 +45,18 @@ const addNewUserFromGithub = async () => {
   const userAlreadyExists = await userRepository.findById(user.id)
 
   if (userAlreadyExists) {
-    return spinner.warn({ text: 'User already exists' })
+    spinner.warn({ text: 'User already exists' })
+    return
   }
 
   if (user.location.length > 255 || user.location.length < 3) {
-    return spinner.error({ text: 'Location not valid' })
+    spinner.error({ text: 'Location not valid' })
+    return
   }
 
   if (user.login.length > 255) {
-    return spinner.error({ text: 'Location not valid' })
+    spinner.error({ text: 'Location not valid' })
+    return
   }
 
   // programming languages
@@ -69,20 +72,34 @@ const addNewUserFromGithub = async () => {
   try {
     await userRepository.insert(user.id, user.login, user.location)
 
-    // TODO refact (performance, transaction...)
-    reposResponse.data.map(async (repo: GithubRepoReponse) => {
-      if (repo.topics.length > 0) {
-        repo.topics.map(async (topic: string) => {
-          await languageRepository.insert(user.id, topic)
-        })
-      }
-    })
+    const languages = handleLanguages(reposResponse.data)
+    await languageRepository.insertMany(user.id, languages)
 
     return spinner.success({ text: 'User saved succesfully' })
   } catch (error) {
     spinner.error({ text: 'Error while storing values in the database' })
     return
   }
+}
+
+function handleLanguages(repos: GithubRepoReponse[]): string[] {
+  let languages: string[] = []
+
+  // get all topics
+  repos.map((repo: GithubRepoReponse) => {
+    if (repo.topics.length <= 0) {
+      return
+    }
+
+    repo.topics.map((topic: string) => {
+      languages.push(topic)
+    })
+  })
+
+  // remove duplicated topics
+  return languages.filter(function (value, key) {
+    return languages.indexOf(value) == key
+  })
 }
 
 export default addNewUserFromGithub
