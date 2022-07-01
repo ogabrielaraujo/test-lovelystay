@@ -1,21 +1,12 @@
-import axios from 'axios'
 import inquirer from 'inquirer'
 import { createSpinner } from 'nanospinner'
 
 import { findUserById, insertManyLanguages, insertUser } from '../repository'
-
-interface GithubUserResponse {
-  id: number
-  login: string
-  location?: string
-}
-
-interface GithubRepoReponse {
-  id: number
-  name: string
-  topics: string[]
-  url: string
-}
+import {
+  getUserInfosFromGithubAPI,
+  getUserReposFromGithubAPI,
+  IGithubRepoReponse,
+} from '../util'
 
 const addNewUserFromGithub = async () => {
   const spinner = createSpinner('Loading...')
@@ -28,17 +19,12 @@ const addNewUserFromGithub = async () => {
 
   spinner.start()
 
-  const userResponse = await axios.get(
-    `https://api.github.com/users/${username}`
-  )
-
-  if (userResponse.status !== 200) {
-    spinner.error({ text: 'Error while searching for github user' })
+  try {
+  } catch (error) {
     return
   }
 
-  const user = userResponse.data as GithubUserResponse
-
+  const user = await getUserInfosFromGithubAPI(username, spinner)
   const userAlreadyExists = await findUserById(user.id)
 
   if (userAlreadyExists) {
@@ -51,25 +37,17 @@ const addNewUserFromGithub = async () => {
     return
   }
 
-  if (user.login.length > 255) {
+  if (user.name.length > 255) {
     spinner.error({ text: 'Location not valid' })
     return
   }
 
-  // programming languages
-  const reposResponse = await axios.get(
-    `https://api.github.com/users/${username}/repos`
-  )
-
-  if (reposResponse.status !== 200 || reposResponse.data.length <= 0) {
-    spinner.error({ text: 'Error while searching for user repos' })
-    return
-  }
+  const topics = await getUserReposFromGithubAPI(username, spinner)
 
   try {
-    await insertUser(user.id, user.login, user.location)
+    await insertUser(user.id, user.name, user.location)
 
-    const languages = getLanguagesFromGithubResponse(reposResponse.data)
+    const languages = getLanguagesFromGithubResponse(topics)
     await insertManyLanguages(user.id, languages)
 
     return spinner.success({ text: 'User saved succesfully' })
@@ -79,11 +57,11 @@ const addNewUserFromGithub = async () => {
   }
 }
 
-function getLanguagesFromGithubResponse(repos: GithubRepoReponse[]): string[] {
+function getLanguagesFromGithubResponse(repos: IGithubRepoReponse[]): string[] {
   let languages: string[] = []
 
   // get all topics
-  repos.map((repo: GithubRepoReponse) => {
+  repos.map((repo: IGithubRepoReponse) => {
     if (repo.topics.length <= 0) {
       return
     }

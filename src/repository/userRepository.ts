@@ -1,4 +1,4 @@
-import { User } from '../domain'
+import { IUser } from '../domain'
 import db from '../util/database'
 
 export async function insertUser(
@@ -19,7 +19,7 @@ export async function insertUser(
   }
 }
 
-export async function findAllUsers(): Promise<[] | User[]> {
+export async function findAllUsers(): Promise<[] | IUser[]> {
   try {
     return await db.any('SELECT * FROM users', [])
   } catch (error) {
@@ -28,7 +28,7 @@ export async function findAllUsers(): Promise<[] | User[]> {
   }
 }
 
-export async function findUserById(id: number): Promise<User | false> {
+export async function findUserById(id: number): Promise<IUser | false> {
   try {
     return await db.oneOrNone('SELECT * FROM users WHERE id = $1', [id])
   } catch (error) {
@@ -39,7 +39,7 @@ export async function findUserById(id: number): Promise<User | false> {
 
 export async function findUserByLocation(
   location: string
-): Promise<User[] | [] | false> {
+): Promise<IUser[] | [] | false> {
   try {
     return await db.any('SELECT * FROM users WHERE location LIKE $1', [
       '%' + location + '%', // allow search for parts of location. ex: Lis for Lisbon
@@ -52,13 +52,13 @@ export async function findUserByLocation(
 
 export async function findUserByLanguage(
   language: string
-): Promise<User[] | [] | false> {
+): Promise<IUser[] | [] | false> {
   try {
     return await db.any(
       `SELECT users.* FROM languages
       INNER JOIN users ON languages."userId" = users.id
       WHERE languages.name = $1`,
-      [language]
+      ['%' + language + '%']
     )
   } catch (error) {
     console.warn(error)
