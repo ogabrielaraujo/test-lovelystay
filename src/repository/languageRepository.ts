@@ -8,8 +8,8 @@ export async function insertManyLanguages(
     await db.tx((tx) => {
       const queries = languages.map((language: string) => {
         return tx.none(
-          'INSERT INTO languages ("userId", "name") VALUES ($1, $2)',
-          [userId, language]
+          'INSERT INTO languages ("userId", "name") VALUES ($<userId>, $<language>)',
+          { userId, language }
         )
       })
 

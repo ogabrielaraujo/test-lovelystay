@@ -8,8 +8,8 @@ export async function insertUser(
 ): Promise<boolean> {
   try {
     await db.oneOrNone(
-      'INSERT INTO users ("id", "name", "location") VALUES ($1, $2, $3)',
-      [id, name, location]
+      'INSERT INTO users ("id", "name", "location") VALUES ($<id>, $<name>, $<location>)',
+      { id, name, location }
     )
 
     return true
@@ -21,7 +21,7 @@ export async function insertUser(
 
 export async function findAllUsers(): Promise<[] | IUser[]> {
   try {
-    return await db.any('SELECT * FROM users', [])
+    return await db.any('SELECT * FROM users')
   } catch (error) {
     console.warn(error)
     return []
@@ -30,7 +30,7 @@ export async function findAllUsers(): Promise<[] | IUser[]> {
 
 export async function findUserById(id: number): Promise<IUser | false> {
   try {
-    return await db.oneOrNone('SELECT * FROM users WHERE id = $1', [id])
+    return await db.oneOrNone('SELECT * FROM users WHERE id = $<id>', { id })
   } catch (error) {
     console.warn(error)
     return false
@@ -41,9 +41,9 @@ export async function findUserByLocation(
   location: string
 ): Promise<IUser[] | [] | false> {
   try {
-    return await db.any('SELECT * FROM users WHERE location LIKE $1', [
-      '%' + location + '%', // allow search for parts of location. ex: Lis for Lisbon
-    ])
+    return await db.any('SELECT * FROM users WHERE location LIKE $<location>', {
+      location: '%' + location + '%', // allow search for parts of location. ex: Lis for Lisbon
+    })
   } catch (error) {
     console.warn(error)
     return false
@@ -57,8 +57,8 @@ export async function findUserByLanguage(
     return await db.any(
       `SELECT users.* FROM languages
       INNER JOIN users ON languages."userId" = users.id
-      WHERE languages.name LIKE $1`,
-      ['%' + language + '%']
+      WHERE languages.name LIKE $<language>`,
+      { language: '%' + language + '%' }
     )
   } catch (error) {
     console.warn(error)
