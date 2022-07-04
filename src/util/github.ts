@@ -17,13 +17,13 @@ export interface IGithubRepoReponse {
 export async function getUserInfosFromGithubAPI(
   username: string,
   spinner
-): Promise<IUser> {
+): Promise<IUser | false> {
   const response = await axios.get(`https://api.github.com/users/${username}`)
 
   if (response.status !== 200) {
     console.error('Not possible to get user info from github')
     spinner.error()
-    return
+    return false
   }
 
   const userInfo = response.data as IGithubUserResponse
@@ -38,7 +38,7 @@ export async function getUserInfosFromGithubAPI(
 export async function getUserReposFromGithubAPI(
   username: string,
   spinner
-): Promise<IGithubRepoReponse[]> {
+): Promise<IGithubRepoReponse[] | false> {
   const response = await axios.get(
     `https://api.github.com/users/${username}/repos`
   )
@@ -46,7 +46,7 @@ export async function getUserReposFromGithubAPI(
   if (response.status !== 200 || response.data.length <= 0) {
     console.error('Error while searching for user repos')
     spinner.error()
-    return
+    return false
   }
 
   return response.data

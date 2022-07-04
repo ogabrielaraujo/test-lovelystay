@@ -20,6 +20,12 @@ const addNewUserFromGithub = async (): Promise<boolean> => {
   spinner.start()
 
   const user = await getUserInfosFromGithubAPI(username, spinner)
+
+  if (!user) {
+    spinner.warn({ text: 'User not found' })
+    return false
+  }
+
   const userAlreadyExists = await findUserById(user.id)
 
   if (userAlreadyExists) {
@@ -42,8 +48,10 @@ const addNewUserFromGithub = async (): Promise<boolean> => {
   try {
     await insertUser(user.id, user.name, user.location)
 
-    const languages = getLanguagesFromGithubResponse(topics)
-    await insertManyLanguages(user.id, languages)
+    if (topics) {
+      const languages = getLanguagesFromGithubResponse(topics)
+      await insertManyLanguages(user.id, languages)
+    }
 
     spinner.success({ text: 'User saved succesfully' })
 

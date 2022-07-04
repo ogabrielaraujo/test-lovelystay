@@ -28,7 +28,7 @@ export async function findAllUsers(): Promise<[] | IUser[]> {
   }
 }
 
-export async function findUserById(id: number): Promise<IUser | false> {
+export async function findUserById(id: number): Promise<any> {
   try {
     return await db.oneOrNone('SELECT * FROM users WHERE id = $<id>', { id })
   } catch (error) {
