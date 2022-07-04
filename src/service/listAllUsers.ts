@@ -1,21 +1,17 @@
-import { createSpinner } from 'nanospinner'
-
 import { findAllUsers } from '../repository'
 
-const listAllUsers = async () => {
-  const spinner = createSpinner('Loading...')
-
+const listAllUsers = async (spinner) => {
   try {
     const users = await findAllUsers()
 
-    spinner.stop()
+    if (spinner) spinner.stop()
+
     console.clear()
 
     console.table(users)
     return
   } catch (error) {
-    spinner.error({ text: 'Error while storing values in the database' })
-    return
+    throw new Error('Error while storing values in the database')
   }
 }
 
