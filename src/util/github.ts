@@ -51,3 +51,25 @@ export async function getUserReposFromGithubAPI(
 
   return response.data
 }
+
+export function getLanguagesFromGithubResponse(
+  repos: IGithubRepoReponse[]
+): string[] {
+  let languages: string[] = []
+
+  // get all topics
+  repos.map((repo: IGithubRepoReponse) => {
+    if (repo.topics.length <= 0) {
+      return
+    }
+
+    repo.topics.map((topic: string) => {
+      languages.push(topic)
+    })
+  })
+
+  // remove duplicated topics
+  return languages.filter(function (value, key) {
+    return languages.indexOf(value) == key
+  })
+}

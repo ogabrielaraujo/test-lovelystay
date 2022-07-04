@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import inquirer from 'inquirer'
+import { createSpinner } from 'nanospinner'
 
 import {
   addNewUserFromGithub,
@@ -16,6 +17,8 @@ let options: string[] = [
 ]
 
 async function main() {
+  const spinner = createSpinner('Loading...')
+
   console.log('Welcome to the LovelyStay CLI :D')
 
   const { navigation } = await inquirer.prompt({
@@ -27,24 +30,35 @@ async function main() {
 
   switch (navigation) {
     case 'Add new user from github':
-      addNewUserFromGithub()
+      const { username } = await inquirer.prompt({
+        name: 'username',
+        type: 'input',
+        message: 'What is the github username?',
+      })
+
+      addNewUserFromGithub(username, spinner)
       break
 
     case 'List all stored users':
-      listAllUsers()
+      listAllUsers(spinner)
       break
 
     case 'Search users by location':
-      searchUserByLocation()
+      searchUserByLocation(spinner, inquirer)
       break
 
     case 'Search users by programming language':
-      searchUserByLanguage()
+      searchUserByLanguage(spinner, inquirer)
 
     default:
       console.log('Not found')
       break
   }
+
+  process.on('uncaughtException', (err) => {
+    spinner.error({ text: err.message })
+    process.exit(1) // mandatory (as per the Node.js docs)
+  })
 }
 
 main()
