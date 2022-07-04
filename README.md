@@ -2,11 +2,11 @@
 
 In this project I used some clean architecture concepts to separate responsibilities
 
-Domain => used for type definitions
-Repository => database connections and operations
-service => business rules and application flow
-Util => more generic application helper functions
-Migration => Run the database queries to create tables
+- Domain => used for type definitions
+- Repository => database connections and operations
+- Service => business rules and application flow
+- Util => more generic application helper functions
+- Migration => Run the database queries to create tables
 
 ### Notes
 
