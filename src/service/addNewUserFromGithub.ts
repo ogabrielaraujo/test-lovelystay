@@ -8,7 +8,7 @@ import {
   IGithubRepoReponse,
 } from '../util'
 
-const addNewUserFromGithub = async () => {
+const addNewUserFromGithub = async (): Promise<boolean> => {
   const spinner = createSpinner('Loading...')
 
   const { username } = await inquirer.prompt({
@@ -19,27 +19,22 @@ const addNewUserFromGithub = async () => {
 
   spinner.start()
 
-  try {
-  } catch (error) {
-    return
-  }
-
   const user = await getUserInfosFromGithubAPI(username, spinner)
   const userAlreadyExists = await findUserById(user.id)
 
   if (userAlreadyExists) {
     spinner.warn({ text: 'User already exists' })
-    return
+    return false
   }
 
   if (user.location.length > 255 || user.location.length < 3) {
     spinner.error({ text: 'Location not valid' })
-    return
+    return false
   }
 
   if (user.name.length > 255) {
     spinner.error({ text: 'Location not valid' })
-    return
+    return false
   }
 
   const topics = await getUserReposFromGithubAPI(username, spinner)
@@ -50,10 +45,12 @@ const addNewUserFromGithub = async () => {
     const languages = getLanguagesFromGithubResponse(topics)
     await insertManyLanguages(user.id, languages)
 
-    return spinner.success({ text: 'User saved succesfully' })
+    spinner.success({ text: 'User saved succesfully' })
+
+    return true
   } catch (error) {
     spinner.error({ text: 'Error while storing values in the database' })
-    return
+    return false
   }
 }
 
